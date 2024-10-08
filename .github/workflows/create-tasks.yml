@@ -16,7 +16,7 @@ jobs:
           STUDENTS=("student1" "student2" "student3" "student4" "student5")  # List all student usernames
           TASK_NAME="new_task"  # Define your task name
           for STUDENT in "${STUDENTS[@]}"; do
-            BRANCH_NAME="cb-in1-b1/$STUDENTId/java/$TASK_NAME"
+            BRANCH_NAME="cb-in1-b1/$STUDENT[A-Za-z0-9_-]+/java/$TASK_NAME"
             git checkout -b "$BRANCH_NAME"
             git push origin "$BRANCH_NAME"
             echo "Created branch: $BRANCH_NAME"
