@@ -17,9 +17,9 @@ jobs:
       # Step 2: Set up Git credentials to push branches
       - name: Set up Git credentials
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.SC_TOKEN }}@github.com/<your-username>/<repo-name>.git
+           git config --global user.name "github-actions[bot]"
+           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+           git remote set-url origin https://x-access-token:${{ secrets.SC_TOKEN }}@github.com/codebegun-dev/task-repo.git  # Replace with your username and repo name
 
       # Step 3: Create and push task branches
       - name: Create and Push Branches for Students
