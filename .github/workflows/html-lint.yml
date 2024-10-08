@@ -1,0 +1,32 @@
+name: Lint HTML
+
+# Trigger the workflow on pushes and pull requests
+on:
+  push:
+    branches:
+      - main
+      - "*/feature/*"
+  pull_request:
+
+jobs:
+  lint-html:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js environment
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      # Install HTMLHint
+      - name: Install HTMLHint
+        run: npm install htmlhint -g
+
+      # Run HTMLHint to validate HTML files
+      - name: Run HTMLHint
+        run: htmlhint "*/.html"
