@@ -21,32 +21,24 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "20"
 
       # Install HTMLHint
       - name: Install HTMLHint
         run: npm install htmlhint -g
 
-      # Debug: Verify HTMLHint installation
-      - name: Verify HTMLHint Version
-        run: htmlhint --version
-
-      # Debug: List HTML Files
-      - name: List HTML Files
-        run: ls -R ./**/*.html || echo "No HTML files found"
-
       # Run HTMLHint to validate HTML files
       - name: Run HTMLHint
         run: htmlhint "**/*.html"
 
-      # Install Cypress
-      - name: Install Cypress
-        run: npm install cypress --save-dev
+      # Install project dependencies including Cypress
+      - name: Install Dependencies
+        run: npm install
 
       # Start a simple HTTP server for serving HTML files
       - name: Start HTTP Server
         run: npx http-server ./ -p 8080 &
 
-      # Run Cypress tests in headless mode
+      # Run Cypress tests
       - name: Run Cypress Tests
         run: npx cypress run
