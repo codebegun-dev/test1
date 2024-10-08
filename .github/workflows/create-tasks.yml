@@ -1,24 +1,41 @@
-name: Create Task Branches
+name: Create Task and Branches for Students
 
 on:
-  workflow_dispatch:  # Allows manual triggering from the Actions tab.
+  workflow_dispatch:  # Allows manual triggering of the workflow
+  schedule:
+    - cron: "0 9 * * 1"  # Optionally run the workflow every Monday at 9 AM
 
 jobs:
-  create-branches:
+  create-task-branches:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Check out the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Create Branches for Students
+      # Step 2: Set up Git credentials to push branches
+      - name: Set up Git credentials
         run: |
-          STUDENTS=("student1" "student2" "student3" "student4" "student5")  # List all student usernames
-          TASK_NAME="new_task"  # Define your task name
-          for STUDENT in "${STUDENTS[@]}"; do
-            BRANCH_NAME="CBIN1B1/$STUDENT/java/$TASK_NAME"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.SC_TOKEN }}@github.com/<your-username>/<repo-name>.git
+
+      # Step 3: Create and push task branches
+      - name: Create and Push Branches for Students
+        run: |
+          # List of students
+          STUDENTS=("student1" "student2" "student3" "student4" "student5")
+          
+          # Define task type and description
+          TASK_TYPE="html"
+          TASK_DESCRIPTION="task1"
+
+          # Loop over each student and create a branch for the task
+          for STUDENT in "${STUDENTS[@]}"
+          do
+            BRANCH_NAME="CBIN1B1-${STUDENT}-${TASK_TYPE}-${TASK_DESCRIPTION}"
+            echo "Creating branch: $BRANCH_NAME"
             git checkout -b "$BRANCH_NAME"
             git push origin "$BRANCH_NAME"
-            echo "Created branch: $BRANCH_NAME"
-            git checkout main  # Switch back to the main branch
           done
