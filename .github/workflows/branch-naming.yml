@@ -1,0 +1,33 @@
+name: Enforce Branch Naming Convention
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Validate Branch Name
+        run: |
+          BRANCH_NAME="${{ github.ref }}"
+          BRANCH_NAME="${BRANCH_NAME#refs/heads/}"  # Strip refs/heads/
+
+          # Define the valid branch name pattern
+          VALID_BRANCH_PATTERN="^(cb-in1-b1)/[a-z0-9-]+/(java|python|angular|react|data)/[a-z0-9-]+$"
+
+          # Check if the branch name matches the pattern
+          if ! [[ "$BRANCH_NAME" =~ $VALID_BRANCH_PATTERN ]]; then
+              echo "Error: Branch name '$BRANCH_NAME' does not follow the naming convention."
+              echo "Valid format: <team-name>/<member-name>/<task-type>/<description>"
+              echo "Examples: cb-in1-b1/siva/java/task1"
+              exit 1
+          fi
