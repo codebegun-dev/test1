@@ -1,43 +1,31 @@
-name: Create Task and Branches for Students
+name: Create Branch and Task
 
 on:
-  workflow_dispatch:  # Allows manual triggering of the workflow
-  schedule:
-    - cron: "0 9 * * 1"  # Optionally run the workflow every Monday at 9 AM
+  workflow_dispatch:  # This allows you to run the workflow manually
+  # You can also add more triggers like push or pull_request if needed
 
 jobs:
-  create-task-branches:
+  create_branch:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
+      # Checkout the repository code
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Git credentials to push branches
+      # Set up Git configuration
       - name: Set up Git credentials
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.SC_TOKEN }}@github.com/codebegun-dev/test1.git
-          git checkout -b ${{ github.event.pull_request.head.ref }}  # Example branch
-          git push origin ${{ github.event.pull_request.head.ref }}
 
-      # Step 3: Create and push task branches
-      - name: Create and Push Branches for Students
+      # Define branch name
+      - name: Define Branch Name
+        id: vars
+        run: echo "BRANCH_NAME=CBIN1B1-student1-html-task1" >> $GITHUB_ENV  # Example branch name
+
+      # Create and push the branch
+      - name: Create and Push Branch
         run: |
-          # List of students
-          STUDENTS=("student1" "student2" "student3" "student4" "student5")
-          
-          # Define task type and description
-          TASK_TYPE="html"
-          TASK_DESCRIPTION="task1"
-
-          # Loop over each student and create a branch for the task
-          for STUDENT in "${STUDENTS[@]}"
-          do
-            BRANCH_NAME="CBIN1B1-${STUDENT}-${TASK_TYPE}-${TASK_DESCRIPTION}"
-            echo "Creating branch: $BRANCH_NAME"
-            git checkout -b "$BRANCH_NAME"
-            git push origin "$BRANCH_NAME"
-          done
+          git checkout -b $BRANCH_NAME
+          git push origin $BRANCH_NAME
