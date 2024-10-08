@@ -1,33 +1,34 @@
-name: Enforce Branch Naming Convention
+name: Check Branch Name
 
 on:
   push:
     branches:
-      - "*"
-  pull_request:
-    branches:
-      - "*"
+      - '**'  # Triggers on push to any branch
 
 jobs:
   check-branch-name:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Validate Branch Name
+      - name: Check Branch Naming Convention
         run: |
-          BRANCH_NAME="${{ github.ref }}"
-          BRANCH_NAME="${BRANCH_NAME#refs/heads/}"  # Strip refs/heads/
-
-          # Define the valid branch name pattern
-          VALID_BRANCH_PATTERN="^(cb-in1-b1)/[a-z0-9-]+/(java|python|angular|react|data)/[a-z0-9-]+$"
-
-          # Check if the branch name matches the pattern
-          if ! [[ "$BRANCH_NAME" =~ $VALID_BRANCH_PATTERN ]]; then
-              echo "Error: Branch name '$BRANCH_NAME' does not follow the naming convention."
-              echo "Valid format: <team-name>/<member-name-internshipId>/<task-type>/<description>"
-              echo "Examples: cb-in1-b1/sivacbin0/java/task1"
-              exit 1
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          echo "Current branch: $BRANCH_NAME"
+          
+          # Allow main branch
+          if [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "Branch name '$BRANCH_NAME' is valid."
+            exit 0
           fi
+
+          # Define your naming convention regex here
+          if [[ ! "$BRANCH_NAME" =~ ^(cb-in[0-9]+-[0-9]+)\/(java|python|data|angular|react)\/[A-Za-z0-9_-]+$ ]]; then
+            echo "Branch name '$BRANCH_NAME' does not follow the naming convention!"
+            echo "Expected format: <team-name>/<member-name-internshipId>/<task-type>/<description>"
+            echo "Examples: cb-in1-b1/sivacbin0/java/task1"
+            exit 1
+          fi
+          echo "Branch name '$BRANCH_NAME' is valid."
