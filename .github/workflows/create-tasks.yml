@@ -2,7 +2,6 @@ name: Create Branch and Task
 
 on:
   workflow_dispatch:  # This allows you to run the workflow manually
-  # You can also add more triggers like push or pull_request if needed
 
 jobs:
   create_branch:
@@ -26,6 +25,8 @@ jobs:
 
       # Create and push the branch
       - name: Create and Push Branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.SC_TOKEN }}  # Use your PAT here
         run: |
           git checkout -b $BRANCH_NAME
-          git push origin $BRANCH_NAME
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/codebegun-dev/test1.git $BRANCH_NAME
