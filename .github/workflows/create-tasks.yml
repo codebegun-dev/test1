@@ -1,7 +1,7 @@
 name: Create Task Branches
 
 on:
-  workflow_dispatch:  # This allows you to run the workflow manually from the Actions tab.
+  workflow_dispatch:  # Allows manual triggering from the Actions tab.
 
 jobs:
   create-branches:
@@ -20,5 +20,5 @@ jobs:
             git checkout -b "$BRANCH_NAME"
             git push origin "$BRANCH_NAME"
             echo "Created branch: $BRANCH_NAME"
-            git checkout main  # Switch back to main branch
+            git checkout main  # Switch back to the main branch
           done
